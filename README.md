@@ -4,6 +4,8 @@ This is an unofficial Pytorch implementation of the paper, `Style Transfer with 
 
 Requirements
 ----------------------------
+Install requirements by `$ pip install -r requirement.txt`.
+
 * Python 3.7+
 * PyTorch 1.10
 * Pillow
@@ -11,7 +13,6 @@ Requirements
 * Numpy
 * imageio
 * tqdm
-
 
 Usage
 ----------------------------
@@ -43,7 +44,7 @@ optional arguments:
 
 Download [vgg19 weight](https://drive.google.com/file/d/1UcSl-Zn3byEmn15NIPXMf9zaGCKc2gfx/view?usp=sharing), [decoder weight](https://drive.google.com/file/d/18JpLtMOapA-vwBz-LRomyTl24A9GwhTF/view?usp=sharing) under the main directory.
 
-To test basic style transfer, run the script test_image.py. Specify `--content_image` \ `--style_img` to the image path, or specify `--content_dir` \ `--style_dir` to iterate all images under this directory. Specify `--grid_pth` to collect all outputs in a grid image.
+To test basic style transfer, run the script test_image.py. Specify `--content_image`, `--style_img` to the image path, or specify `--content_dir`, `--style_dir` to iterate all images under this directory. Specify `--grid_pth` to collect all outputs in a grid image.
 
 ```
 $ python test.py --content_image $IMG --style_image $STYLE --cuda
