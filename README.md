@@ -43,10 +43,10 @@ optional arguments:
 
 Download [vgg19 weight](https://drive.google.com/file/d/1UcSl-Zn3byEmn15NIPXMf9zaGCKc2gfx/view?usp=sharing), [decoder weight](https://drive.google.com/file/d/18JpLtMOapA-vwBz-LRomyTl24A9GwhTF/view?usp=sharing) under main folder.
 
-To test basic style transfer, run the script test_image.py. Specify `--content_image` or `style_img` to the image path. Specify `--content_dir` or `--style_dir` to iterate all images under this directory. Specify `--grid_pth` to collect all outputs in a grid image.
+To test basic style transfer, run the script test_image.py. Specify `--content_image` or `--style_img` to the image path. Specify `--content_dir` or `--style_dir` to iterate all images under this directory. Specify `--grid_pth` to collect all outputs in a grid image.
 
 ```
-$ python test.py --content_image $IMG --style_image $STYLE --decoder_weight $WEIGHT --cuda
+$ python test.py --content_image $IMG --style_image $STYLE --cuda
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -58,7 +58,7 @@ optional arguments:
                         single style image
   --style_dir STYLE_DIR
                         style image directory, iterate all images under this directory
-  --decoder_weight DECODER_WEIGHT       decoder weight file
+  --decoder_weight DECODER_WEIGHT       decoder weight file (default='decoder.pth')
   --alpha {Alpha Range}
                         Alpha [0.0, 1.0] controls style transfer level
   --cuda                Use CUDA
@@ -69,10 +69,10 @@ optional arguments:
 
 ### Test Image Interpolation Style Transfer
 
-To test style transfer interpolation, run the script test_interpolate.py. Specify `style_image` with multiple paths separated by comma. Specify `--interpolation_weights` to interpolate once. Specify `--grid_pth` to interpolate with different built-in weights and provide 4 style images.
+To test style transfer interpolation, run the script test_interpolate.py. Specify `--style_image` with multiple paths separated by comma. Specify `--interpolation_weights` to interpolate once. Specify `--grid_pth` to interpolate with different built-in weights and provide 4 style images.
 
 ```
-$ python test_interpolation.py --content_image $IMG --style_image $STYLE --decoder_weight $WEIGHT --cuda
+$ python test_interpolation.py --content_image $IMG --style_image $STYLE $WEIGHT --cuda
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -80,9 +80,9 @@ optional arguments:
                         single content image file
   --style_image STYLE_IMAGE
                         multiple style images file separated by comma
-  --decoder_weight DECODER_WEIGHT       decoder weight file
+  --decoder_weight DECODER_WEIGHT       decoder weight file (default='decoder.pth')
   --alpha {Alpha Range}
-                        Alpha [0.0, 1.0] controls style transfer level
+                        Alpha [0.0, 1.0] (default=1.0) controls style transfer level
   --interpolation_weights INTERPOLATION_WEIGHTS
                         Interpolation weight of each style image, separated by comma.
                         Do not specify if input grid_pth.
@@ -99,7 +99,7 @@ optional arguments:
 To test video style transfer, run the script test_video.py. 
 
 ```
-$ python test_video.py --content_video $VID --style_image $STYLE --decoder_weight $WEIGHT --cuda
+$ python test_video.py --content_video $VID --style_image $STYLE --cuda
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -107,11 +107,22 @@ optional arguments:
                         single content video file
   --style_image STYLE_IMAGE
                         single style image
-  --decoder_weight DECODER_WEIGHT       decoder weight file
+  --decoder_weight DECODER_WEIGHT       decoder weight file (default='decoder.pth')
   --alpha {Alpha Range}
                         Alpha [0.0, 1.0] controls style transfer level
   --cuda                Use CUDA
 ```
+
+Examples
+----------------------------
+### Test Output
+![grid](https://github.com/media-comp/2022-AdaIN-pytorch/tree/main/examples/grid.jpg)
+
+### Different level of style transfer
+![grid_alpha](https://github.com/media-comp/2022-AdaIN-pytorch/tree/main/examples/grid_alpha.png)
+
+### Interpolation Style Transfer
+![grid_inter](https://github.com/media-comp/2022-AdaIN-pytorch/tree/main/examples/grid_interpolation.png)
 
 
 References
