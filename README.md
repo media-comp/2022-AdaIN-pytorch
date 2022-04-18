@@ -69,7 +69,7 @@ optional arguments:
 
 ### Test Image Interpolation Style Transfer
 
-To test style transfer interpolation, run the script test_interpolate.py. Specify `style_image` with multiple paths separated by comma. Specify `--interpolation_weights` to interpolate once. Specify `--grid_pth` to interpolate with different built-in weights.
+To test style transfer interpolation, run the script test_interpolate.py. Specify `style_image` with multiple paths separated by comma. Specify `--interpolation_weights` to interpolate once. Specify `--grid_pth` to interpolate with different built-in weights and provide 4 style images.
 
 ```
 $ python test_interpolation.py --content_image $IMG --style_image $STYLE --decoder_weight $WEIGHT --cuda
@@ -88,12 +88,9 @@ optional arguments:
                         Do not specify if input grid_pth.
   --cuda                Use CUDA
   --grid_pth GRID_PTH
-                        Specify a grid image path (default=None) to perform interpolation style 
-                        
-                        transfer multiple times with different built-in weights and generate a 
-                        
-                        grid image that contains all style transferred images. Provide 4 style 
-                        
+                        Specify a grid image path (default=None) to perform interpolation style
+                        transfer multiple times with different built-in weights and generate a
+                        grid image that contains all style transferred images. Provide 4 style
                         images. Do not specify if input interpolation_weights.
 ```
 

@@ -16,7 +16,7 @@ parser.add_argument('--content_image', type=str, help='Content image file path')
 parser.add_argument('--content_dir', type=str, help='Content image folder path')
 parser.add_argument('--style_image', type=str, help='Style image file path')
 parser.add_argument('--style_dir', type=str, help='Content image folder path')
-parser.add_argument('--decoder_weight', type=str, required=True, help='Decoder weight file path')
+parser.add_argument('--decoder_weight', type=str, default='decoder.pth', help='Decoder weight file path')
 parser.add_argument('--alpha', type=float, default=1.0, choices=[Range(0.0, 1.0)], help='Alpha [0.0, 1.0] controls style transfer level')
 parser.add_argument('--cuda', action='store_true', help='Use CUDA')
 parser.add_argument('--grid_pth', type=str, default=None, help='Specify a grid image path (default=None) if generate a grid image that contains all style transferred images')
@@ -66,6 +66,9 @@ def main():
 	else:
 		style_pths = [Path(f) for f in glob(args.style_dir+'/*')]
 
+	assert len(content_pths) > 0, 'Failed to load content image'
+	assert len(style_pths) > 0, 'Failed to load style image'
+
 	out_dir = './results/'
 	os.makedirs(out_dir, exist_ok=True)
 
@@ -80,7 +83,7 @@ def main():
 	
 	# Prepare grid image
 	if args.grid_pth:
-		imgs = [np.zeros((1,1))]
+		imgs = [np.ones((1, 1, 3), np.uint8) * 255]
 		for style_pth in style_pths:
 			imgs.append(Image.open(style_pth))
 	
@@ -104,7 +107,7 @@ def main():
 		
 			toc = time.perf_counter() # End time
 			print("Content: " + content_pth.stem + ". Style: " \
-				+ style_pth.stem + '. Style Transfer time: %.4f seconds' % (toc-tic))
+				+ style_pth.stem + '. Alpha: ' + str(args.alpha) + '. Style Transfer time: %.4f seconds' % (toc-tic))
 			times.append(toc-tic)
 
 			out_pth = out_dir + content_pth.stem + '_style_' + style_pth.stem + '_alpha' + str(args.alpha) + content_pth.suffix
@@ -113,8 +116,11 @@ def main():
 			if args.grid_pth:
 				imgs.append(Image.open(out_pth))	
 
-	avg = sum(times)/len(times)
-	print("Average style transfer time: %.4f seconds" % (avg))
+	# Remove runtime of first iteration because it is flawed for some unknown reason
+	if len(times) > 1:
+		times.pop(0)
+		avg = sum(times)/len(times)
+		print("Average style transfer time: %.4f seconds" % (avg))
 
 	if args.grid_pth:
 		print("Generating grid image")

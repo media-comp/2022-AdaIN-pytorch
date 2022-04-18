@@ -14,7 +14,7 @@ from tqdm import tqdm
 parser = argparse.ArgumentParser()
 parser.add_argument('--content_video', type=str, required=True, help='Content video file path')
 parser.add_argument('--style_image', type=str, required=True, help='Style image file path')
-parser.add_argument('--decoder_weight', type=str, required=True, help='Decoder weight file path')
+parser.add_argument('--decoder_weight', type=str, default='decoder.pth', help='Decoder weight file path')
 parser.add_argument('--alpha', type=float, default=1.0, choices=[Range(0.0, 1.0)], help='Alpha [0.0, 1.0] controls style transfer level')
 parser.add_argument('--cuda', action='store_true', help='Use CUDA')
 args = parser.parse_args()

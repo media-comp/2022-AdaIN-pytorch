@@ -13,7 +13,7 @@ from glob import glob
 parser = argparse.ArgumentParser()
 parser.add_argument('--content_image', type=str, help='Test image file path')
 parser.add_argument('--style_image', type=str, required=True, help='Multiple Style image file path, separated by comma')
-parser.add_argument('--decoder_weight', type=str, required=True, help='Decoder weight file path')
+parser.add_argument('--decoder_weight', type=str, default='decoder.pth', help='Decoder weight file path')
 parser.add_argument('--alpha', type=float, default=1.0, choices=[Range(0.0, 1.0)], help='Alpha [0.0, 1.0] controls style transfer level')
 parser.add_argument('--interpolation_weights', type=str, help='Weights of interpolate multiple style images')
 parser.add_argument('--cuda', action='store_true', help='Use CUDA')
@@ -67,11 +67,14 @@ def main():
 
 	style_pths_list = args.style_image.split(',')
 	style_pths = [Path(pth) for pth in style_pths_list]
+
+	assert len(content_pths) > 0, 'Failed to load content image'
+	assert len(style_pths) > 0, 'Failed to load style image'
 	
 	inter_weights = []
 	# If grid mode, use 4 style images, 5x5 interpolation weights
 	if args.grid_pth:
-		assert len(style_pths) == 4
+		assert len(style_pths) == 4, "Under grid mode, specify 4 style images"
 		inter_weights = [ [ min(4-a, 4-b) / 4,  min(4-a, b) / 4, min(a, 4-b) / 4, min(a, b) / 4] \
 			for a in range(5) for b in range(5) ]
 
