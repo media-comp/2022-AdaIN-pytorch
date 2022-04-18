@@ -124,6 +124,13 @@ Examples
 ### Interpolation Style Transfer
 ![grid_inter](https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/examples/grid_interpolation.png)
 
+### Video Style Transfer
+Original Video
+https://user-images.githubusercontent.com/42717345/163804332-5a978090-0d32-49bc-80e8-a11cd6542cd3.mp4
+Style Image
+![picasso_self_portrait](https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/images/art/picasso_self_portrait.jpg)
+Style Transfer Video
+https://user-images.githubusercontent.com/42717345/163804481-f8900756-49ca-48b2-b2f1-e545aa56e948.mp4
 
 References
 ----------------------------
