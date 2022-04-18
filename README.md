@@ -115,14 +115,14 @@ optional arguments:
 
 Examples
 ----------------------------
-### Test Output
-![grid](https://github.com/media-comp/2022-AdaIN-pytorch/tree/main/examples/grid.jpg)
+### Basic Style Transfer
+![grid](https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/examples/grid.jpg)
 
-### Different level of style transfer
-![grid_alpha](https://github.com/media-comp/2022-AdaIN-pytorch/tree/main/examples/grid_alpha.png)
+### Different levels of style transfer
+![grid_alpha](https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/examples/grid_alpha.png)
 
 ### Interpolation Style Transfer
-![grid_inter](https://github.com/media-comp/2022-AdaIN-pytorch/tree/main/examples/grid_interpolation.png)
+![grid_inter](https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/examples/grid_interpolation.png)
 
 
 References
