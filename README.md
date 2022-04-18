@@ -1,6 +1,6 @@
 2022-AdaIN-pytorch
 ============================
-This is an unofficial Pytorch implementation of the paper, 'Style Transfer with Adaptive Instance Normalization' [arxiv](https://arxiv.org/abs/1703.06868). I referred to the [official implementation](https://github.com/xunhuang1995/AdaIN-style) in Torch. I used pretrained weights for vgg19 and decoder from [naoto0804](https://github.com/naoto0804/pytorch-AdaIN).
+This is an unofficial Pytorch implementation of the paper, `Style Transfer with Adaptive Instance Normalization` [arxiv](https://arxiv.org/abs/1703.06868). I referred to the [official implementation](https://github.com/xunhuang1995/AdaIN-style) in Torch. I used pretrained weights for vgg19 and decoder from [naoto0804](https://github.com/naoto0804/pytorch-AdaIN).
 
 Requirements
 ----------------------------
@@ -43,7 +43,7 @@ optional arguments:
 
 Download [vgg19 weight](https://drive.google.com/file/d/1UcSl-Zn3byEmn15NIPXMf9zaGCKc2gfx/view?usp=sharing), [decoder weight](https://drive.google.com/file/d/18JpLtMOapA-vwBz-LRomyTl24A9GwhTF/view?usp=sharing) under main folder.
 
-To test basic style transfer, run the script test_image.py. Specify '--content_image' or 'style_img' to the image path. Specify '--content_dir' or '--style_dir' to iterate all images under this directory. Specify '--grid_pth' to collect all outputs in a grid image.
+To test basic style transfer, run the script test_image.py. Specify `--content_image` or `style_img` to the image path. Specify `--content_dir` or `--style_dir` to iterate all images under this directory. Specify `--grid_pth` to collect all outputs in a grid image.
 
 ```
 $ python test.py --content_image $IMG --style_image $STYLE --decoder_weight $WEIGHT --cuda
@@ -69,7 +69,7 @@ optional arguments:
 
 ### Test Image Interpolation Style Transfer
 
-To test style transfer interpolation, run the script test_interpolate.py. Specify 'style_image' with multiple paths separated by comma. Specify '--interpolation_weights' to interpolate once. Specify '--grid_pth' to interpolate with different built-in weights.
+To test style transfer interpolation, run the script test_interpolate.py. Specify `style_image` with multiple paths separated by comma. Specify `--interpolation_weights` to interpolate once. Specify `--grid_pth` to interpolate with different built-in weights.
 
 ```
 $ python test_interpolation.py --content_image $IMG --style_image $STYLE --decoder_weight $WEIGHT --cuda
