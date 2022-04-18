@@ -126,11 +126,18 @@ Examples
 
 ### Video Style Transfer
 Original Video
-![original_video](https://user-images.githubusercontent.com/42717345/163804332-5a978090-0d32-49bc-80e8-a11cd6542cd3.mp4)
+
+https://user-images.githubusercontent.com/42717345/163805137-d7ba350b-a42e-4b91-ac2b-4916b1715153.mp4
+
+
 Style Image
-![picasso_self_portrait](https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/images/art/picasso_self_portrait.jpg)
+
+<img src="https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/images/art/picasso_self_portrait.jpg" alt="drawing" width="200"/>
+
 Style Transfer Video
-![style_transfer_video](https://user-images.githubusercontent.com/42717345/163804481-f8900756-49ca-48b2-b2f1-e545aa56e948.mp4)
+
+https://user-images.githubusercontent.com/42717345/163805886-a1199a40-6032-4baf-b2d4-30e6e05b3385.mp4
+
 
 References
 ----------------------------
