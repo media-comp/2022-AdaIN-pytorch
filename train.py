@@ -10,7 +10,7 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--content_dir', type=str, required=True, help='content images folder path')
 	parser.add_argument('--style_dir', type=str, required=True, help='style images folder path')
-	parser.add_argument('--epochs', type=int, default=1, help='Number of epoch')
+	parser.add_argument('--epochs', type=int, default=10, help='Number of epoch')
 	parser.add_argument('--batch_size', type=int, default=8, help='Batch size')
 	parser.add_argument('--resume', type=int, default=0, help='Continue training from epoch')
 	parser.add_argument('--cuda', action='store_true', help='Use CUDA')
@@ -31,6 +31,7 @@ def main():
 	losses = []
 	iteration = 0
 
+	# If resume
 	if args.resume > 0:
 		states = torch.load(check_point_dir + "epoch_" + str(args.resume)+'.pth')
 		model.decoder.load_state_dict(states['decoder'])
@@ -44,9 +45,11 @@ def main():
 		train_tqdm = tqdm(train_loader)
 		train_tqdm.set_description('Loss: %.4f, Content loss: %.4f, Style loss: %.4f' % (total_loss, content_loss, style_loss))
 		losses.append((iteration, total_loss, content_loss, style_loss))
-		total_loss, content_loss, style_loss = 0.0, 0.0, 0.0
+		total_num = 0
 		  
 		for content_batch, style_batch in train_tqdm:
+			
+			decoder_optimizer.zero_grad()
 			
 			content_batch = content_batch.to(device)
 			style_batch = style_batch.to(device)
@@ -55,39 +58,40 @@ def main():
 			loss_scaled = loss_content + 10 * loss_style
 			loss_scaled.backward()
 			decoder_optimizer.step()
-			total_loss += loss_scaled.item() * style_batch.size(0)
-			decoder_optimizer.zero_grad()
-			
-			total_num += style_batch.size(0)
-			
-			if iteration % 100 == 0 and iteration > 0:
-				
-				total_loss /= total_num
-				content_loss /= total_num
-				style_loss /= total_num
-				print('')
-				train_tqdm.set_description('Loss: %.4f, Content loss: %.4f, Style loss: %.4f' % (total_loss, content_loss, style_loss))
-				
-				losses.append((iteration, total_loss, content_loss, style_loss))
-				
-				total_loss, content_loss, style_loss = 0.0, 0.0, 0.0
-				total_num = 0  
+			total_loss = loss_scaled.item()
+			content_loss = loss_content.item()
+			style_loss = loss_style.item()
 
-			if iteration % np.ceil(len(train_loader.dataset)/args.batch_size) == 0 and iteration > 0:
-				total_loss /= total_num
-				content_loss /= total_num
-				style_loss /= total_num
-				total_num = 0
-			
+			train_tqdm.set_description('Loss: %.4f, Content loss: %.4f, Style loss: %.4f' % (total_loss, content_loss, style_loss))
 			iteration += 1
+
+			# if iteration % 100 == 0 and iteration > 0:
+				
+			# 	total_loss /= total_num
+			# 	content_loss /= total_num
+			# 	style_loss /= total_num
+			# 	print('')
+			# 	train_tqdm.set_description('Loss: %.4f, Content loss: %.4f, Style loss: %.4f' % (total_loss, content_loss, style_loss))
+				
+			# 	losses.append((iteration, total_loss, content_loss, style_loss))
+				
+			# 	total_loss, content_loss, style_loss = 0.0, 0.0, 0.0
+			# 	total_num = 0  
+
+			# if iteration % np.ceil(len(train_loader.dataset)/args.batch_size) == 0 and iteration > 0:
+			# 	total_loss /= total_num
+			# 	content_loss /= total_num
+			# 	style_loss /= total_num
+			# 	total_num = 0
+		
 		
 		print('Finished epoch: %i/%i' % (epoch, int(args.epochs)))
 
-		states = {'decoder': model.decoder.state_dict(), 'decoder_optimizer': decoder_optimizer.state_dict(), 
-			'losses': losses, 'iteration': iteration}
-		torch.save(states, check_point_dir + 'epoch_%i.pth' % (epoch))
-		torch.save(model.decoder.state_dict(), weights_dir + 'decoder_epoch_%i.pth' % (epoch))	
-		np.savetxt("losses", losses, fmt='%i,%.4f,%.4f,%.4f')						
+		# states = {'decoder': model.decoder.state_dict(), 'decoder_optimizer': decoder_optimizer.state_dict(), 
+		# 	'losses': losses, 'iteration': iteration}
+		# torch.save(states, check_point_dir + 'epoch_%i.pth' % (epoch))
+		# torch.save(model.decoder.state_dict(), weights_dir + 'decoder_epoch_%i.pth' % (epoch))	
+		# np.savetxt("losses", losses, fmt='%i,%.4f,%.4f,%.4f')						
 
 if __name__ == '__main__':
 	main()
