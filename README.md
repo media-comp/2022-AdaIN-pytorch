@@ -1,6 +1,6 @@
 2022-AdaIN-pytorch
 ============================
-This is an unofficial Pytorch implementation of the paper, `Style Transfer with Adaptive Instance Normalization, ICCV 2017` [arxiv](https://arxiv.org/abs/1703.06868). I referred to the [official implementation](https://github.com/xunhuang1995/AdaIN-style) in Torch. I used pretrained weights of vgg19 and decoder from [naoto0804](https://github.com/naoto0804/pytorch-AdaIN).
+This is an unofficial Pytorch implementation of the paper, `Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization, ICCV 2017` [arxiv](https://arxiv.org/abs/1703.06868). I referred to the [official implementation](https://github.com/xunhuang1995/AdaIN-style) in Torch. I used pretrained weights of vgg19 and decoder from [naoto0804](https://github.com/naoto0804/pytorch-AdaIN).
 
 Requirements
 ----------------------------
