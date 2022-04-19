@@ -1,6 +1,6 @@
 2022-AdaIN-pytorch
 ============================
-This is an unofficial Pytorch implementation of the paper, `Style Transfer with Adaptive Instance Normalization` [arxiv](https://arxiv.org/abs/1703.06868). I referred to the [official implementation](https://github.com/xunhuang1995/AdaIN-style) in Torch. I used pretrained weights of vgg19 and decoder from [naoto0804](https://github.com/naoto0804/pytorch-AdaIN).
+This is an unofficial Pytorch implementation of the paper, `Style Transfer with Adaptive Instance Normalization, ICCV 2017` [arxiv](https://arxiv.org/abs/1703.06868). I referred to the [official implementation](https://github.com/xunhuang1995/AdaIN-style) in Torch. I used pretrained weights of vgg19 and decoder from [naoto0804](https://github.com/naoto0804/pytorch-AdaIN).
 
 Requirements
 ----------------------------
@@ -104,7 +104,7 @@ $ python test_video.py --content_video $VID --style_image $STYLE --cuda
 
 optional arguments:
   -h, --help            show this help message and exit
-  --content_image CONTENT_IMAGE
+  --content_video CONTENT_IMAGE
                         single content video file
   --style_image STYLE_IMAGE
                         single style image
