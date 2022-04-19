@@ -14,6 +14,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run test.py
+      - name: Run test.py 
         run: 
           python test.py --content_image images/content/cat.jpg --style_image images/art/asheville.jpg
