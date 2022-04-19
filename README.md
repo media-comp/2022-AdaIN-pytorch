@@ -145,3 +145,4 @@ References
 * X. Huang and S. Belongie. "Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization.", in ICCV, 2017. [arxiv](https://arxiv.org/abs/1703.06868)
 * [Original implementation in Torch](https://github.com/xunhuang1995/AdaIN-style)
 * [Pretrained weights](https://github.com/naoto0804/pytorch-AdaIN)
+* List of all source URLs of images collected from the internet. [Image_sources.txt](https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/Image_sources.txt)
