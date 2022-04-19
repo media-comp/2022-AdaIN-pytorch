@@ -1,0 +1,19 @@
+name: Test Style Transfer
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: python install -r requirements.txt
+
+      - name: Run test.py
+        run: 
+          python test.py --content_image images/content/cat.jpg --style_image images/art/asheville.jpg
