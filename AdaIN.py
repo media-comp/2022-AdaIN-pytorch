@@ -13,7 +13,11 @@ class AdaINNet(nn.Module):
     def __init__(self, vgg_weight):
         super().__init__()
         self.encoder = vgg19(vgg_weight)
-        self.encoder = nn.Sequential(*list(self.encoder.children())[:22]) # drop layers after 4_1
+        
+        # drop layers after 4_1
+        self.encoder = nn.Sequential(*list(self.encoder.children())[:22])
+        
+        # No optimization for encoder
         for parameter in self.encoder.parameters():
             parameter.requires_grad = False
         
@@ -21,15 +25,29 @@ class AdaINNet(nn.Module):
         
         self.mseloss = nn.MSELoss()
 
+    """
+    Computes style loss of two images
+
+    Args:
+        x (torch.FloatTensor): content image tensor
+        y (torch.FloatTensor): style image tensor
+
+    Return:
+        Mean Squared Error between x.mean, y.mean and MSE between x.std, y.std
+    """
     def _style_loss(self, x, y):
         return self.mseloss(torch.mean(x, dim=[2, 3]), torch.mean(y, dim=[2, 3])) + \
             self.mseloss(torch.std(x, dim=[2, 3]), torch.std(y, dim=[2, 3]))
 
     def forward(self, content, style, alpha=1.0):
+        # Generate image features
         content_enc = self.encoder(content)
         style_enc = self.encoder(style)
+
+        # Perform style transfer on feature space
         transfer_enc = adaptive_instance_normalization(content_enc, style_enc)
 
+        # Generate outptu image
         out = self.decoder(transfer_enc)
         
         # vgg19 layer relu1_1
@@ -47,6 +65,7 @@ class AdaINNet(nn.Module):
         # vgg19 layer relu4_1
         out_enc = self.encoder[13:](out_relu31)
 
+        # Calculate loss
         content_loss = self.mseloss(out_enc, transfer_enc)
         style_loss = self._style_loss(out_relu11, style_relu11) + self._style_loss(out_relu21, style_relu21) + \
             self._style_loss(out_relu31, style_relu31) + self._style_loss(out_enc, style_enc)

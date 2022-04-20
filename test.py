@@ -69,6 +69,7 @@ def main():
 	assert len(content_pths) > 0, 'Failed to load content image'
 	assert len(style_pths) > 0, 'Failed to load style image'
 
+	# Prepare directory for saving results
 	out_dir = './results/'
 	os.makedirs(out_dir, exist_ok=True)
 
@@ -81,8 +82,9 @@ def main():
 	# Prepare image transform
 	t = transform(512)
 	
-	# Prepare grid image
+	# Prepare grid image, add style images to the first row
 	if args.grid_pth:
+		# Add empty image
 		imgs = [np.ones((1, 1, 3), np.uint8) * 255]
 		for style_pth in style_pths:
 			imgs.append(Image.open(style_pth))
@@ -101,15 +103,20 @@ def main():
 			
 			style_tensor = t(Image.open(style_pth)).unsqueeze(0).to(device)
 			
-			tic = time.perf_counter() # Start time
+			# Start time
+			tic = time.perf_counter()
+			
+			# Execute style transfer
 			with torch.no_grad():
 				out_tensor = style_transfer(content_tensor, style_tensor, model.encoder, model.decoder, args.alpha).cpu()
 		
-			toc = time.perf_counter() # End time
+			 # End time
+			toc = time.perf_counter()
 			print("Content: " + content_pth.stem + ". Style: " \
 				+ style_pth.stem + '. Alpha: ' + str(args.alpha) + '. Style Transfer time: %.4f seconds' % (toc-tic))
 			times.append(toc-tic)
 
+			# Save image
 			out_pth = out_dir + content_pth.stem + '_style_' + style_pth.stem + '_alpha' + str(args.alpha) + content_pth.suffix
 			save_image(out_tensor, out_pth)
 
@@ -122,6 +129,7 @@ def main():
 		avg = sum(times)/len(times)
 		print("Average style transfer time: %.4f seconds" % (avg))
 
+	# Generate grid image
 	if args.grid_pth:
 		print("Generating grid image")
 		grid_image(len(content_pths) + 1, len(style_pths) + 1, imgs, save_pth=args.grid_pth)

@@ -17,21 +17,24 @@ def main():
 	args = parser.parse_args()
 
 	device = torch.device('cuda' if args.cuda and torch.cuda.is_available() else 'cpu')
-	
+
 	check_point_dir = './check_point/'
 	weights_dir = './weights/'
+
+	# Prepare Training dataset
 	train_set = TrainSet(args.content_dir, args.style_dir)
 	train_loader = DataLoader(dataset=train_set, batch_size=args.batch_size, shuffle=True)
-	
+
+	# load vgg19 weights
 	vgg_model = torch.load('vgg_normalized.pth')
 	model = AdaINNet(vgg_model).to(device)
-
 	decoder_optimizer = torch.optim.Adam(model.decoder.parameters(), lr=1e-6)
+
 	total_loss, content_loss, style_loss = 0.0, 0.0, 0.0
 	losses = []
 	iteration = 0
 
-	# If resume
+	# If resume training, load states
 	if args.resume > 0:
 		states = torch.load(check_point_dir + "epoch_" + str(args.resume)+'.pth')
 		model.decoder.load_state_dict(states['decoder'])
@@ -54,10 +57,14 @@ def main():
 			content_batch = content_batch.to(device)
 			style_batch = style_batch.to(device)
 
+			# Feed forward and compute loss
 			loss_content, loss_style = model(content_batch, style_batch)
 			loss_scaled = loss_content + 10 * loss_style
+
+			# Gradient descent
 			loss_scaled.backward()
 			decoder_optimizer.step()
+
 			total_loss = loss_scaled.item()
 			content_loss = loss_content.item()
 			style_loss = loss_style.item()

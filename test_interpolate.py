@@ -102,24 +102,28 @@ def main():
 	for content_pth in content_pths:
 		content_tensor = t(Image.open(content_pth)).unsqueeze(0).to(device)
 
+		# Prepare multiple style images
 		style_tensor = []
 		for style_pth in style_pths:
 			img = Image.open(style_pth)
-			style_tensor.append(transform([512, 512])(img)) # Convert style images to same size
+			style_tensor.append(transform([512, 512])(img))
 		style_tensor = torch.stack(style_tensor, dim=0).to(device)
 		
-		for inter_weight in inter_weights:			
+		for inter_weight in inter_weights:
+			# Execute Interpolate style transfer			
 			with torch.no_grad():
 				out_tensor = out_tensor = interpolate_style_transfer(content_tensor, style_tensor, model.encoder, model.decoder, args.alpha, inter_weight).cpu()
 			
 			print("Content: " + content_pth.stem + ". Style: " + str([style_pth.stem for style_pth in style_pths]) + ". Interpolation weight: ", str(inter_weight))
 
+			# Save results
 			out_pth = out_dir + content_pth.stem + '_interpolate_' + str(inter_weight) + content_pth.suffix
 			save_image(out_tensor, out_pth)
 
 			if args.grid_pth:
 				imgs.append(Image.open(out_pth))
 
+	# Generate grid image
 	if args.grid_pth:
 		print("Generating grid image")
 		grid_image(5, 5, imgs, save_pth=args.grid_pth)

@@ -55,13 +55,16 @@ def main():
 	style_image_pth = Path(args.style_image)
 	style_image = Image.open(style_image_pth)
 
+	# Read video info
 	fps = int(content_video.get(cv2.CAP_PROP_FPS))
 	frame_count = int(content_video.get(cv2.CAP_PROP_FRAME_COUNT))
 	video_height = int(content_video.get(cv2.CAP_PROP_FRAME_HEIGHT))
 	video_width = int(content_video.get(cv2.CAP_PROP_FRAME_WIDTH))
 
+	# Prepare loop
 	video_tqdm = tqdm(frame_count)
 
+	# Prepare output video writer
 	out_dir = './results_video/'
 	os.makedirs(out_dir, exist_ok=True)
 	out_pth = Path(out_dir + content_video_pth.stem + '_style_' \
@@ -81,7 +84,8 @@ def main():
 
 	while content_video.isOpened():
 		ret, content_image = content_video.read()
-		if not ret: # Failed to read a frame
+		# Failed to read a frame
+		if not ret:
 			break
 		
 		content_tensor = t(Image.fromarray(content_image)).unsqueeze(0).to(device)
@@ -96,6 +100,7 @@ def main():
 		out_tensor = cv2.normalize(src=out_tensor, dst=None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
 		out_tensor = cv2.resize(out_tensor, (video_width, video_height), interpolation=cv2.INTER_CUBIC)
 
+		# Write output frame to video
 		writer.append_data(np.array(out_tensor))
 		video_tqdm.update(1)
 
