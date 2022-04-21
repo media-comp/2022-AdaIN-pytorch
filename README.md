@@ -4,7 +4,7 @@ This is an unofficial Pytorch implementation of the paper, `Arbitrary Style Tran
 
 Requirements
 ----------------------------
-Install requirements by `$ pip install -r requirement.txt`
+Install requirements by `$ pip install -r requirements.txt`
 
 * Python 3.7+
 * PyTorch 1.10
