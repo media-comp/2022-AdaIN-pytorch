@@ -1,5 +1,6 @@
 import os
 import argparse
+from turtle import end_fill
 import torch
 import time
 import numpy as np
@@ -20,6 +21,7 @@ parser.add_argument('--decoder_weight', type=str, default='decoder.pth', help='D
 parser.add_argument('--alpha', type=float, default=1.0, choices=[Range(0.0, 1.0)], help='Alpha [0.0, 1.0] controls style transfer level')
 parser.add_argument('--cuda', action='store_true', help='Use CUDA')
 parser.add_argument('--grid_pth', type=str, default=None, help='Specify a grid image path (default=None) if generate a grid image that contains all style transferred images')
+parser.add_argument('--color_control', action='store_true', help='Preserve content color')
 args = parser.parse_args()
 assert args.content_image or args.content_dir
 assert args.style_image or args.style_dir
@@ -52,6 +54,29 @@ def style_transfer(content_tensor, style_tensor, encoder, decoder, alpha=1.0):
 	
 	mix_enc = alpha * transfer_enc + (1-alpha) * content_enc
 	return decoder(mix_enc)
+
+
+def linear_histogram_matching(content_tensor, style_tensor):
+	"""
+	Given content_tensor and style_tensor, transform style_tensor histogram to that of content_tensor.
+
+	Args:
+		content_tensor (torch.FloatTensor): Content image 
+		style_tensor (torch.FloatTensor): Style Image
+	
+	Return:
+		style_tensor (torch.FloatTensor): histogram matched Style Image
+	"""
+	std_ct_1, mean_ct_1 = torch.var_mean(content_tensor[0][0],unbiased = False)
+	std_ct_2, mean_ct_2 = torch.var_mean(content_tensor[0][1],unbiased = False)
+	std_ct_3, mean_ct_3 = torch.var_mean(content_tensor[0][2],unbiased = False)
+	std_st_1, mean_st_1 = torch.var_mean(style_tensor[0][0],unbiased = False)
+	std_st_2, mean_st_2 = torch.var_mean(style_tensor[0][1],unbiased = False)
+	std_st_3, mean_st_3 = torch.var_mean(style_tensor[0][2],unbiased = False)
+	style_tensor[0][0] = (style_tensor[0][0] - mean_st_1) * std_ct_1 / std_st_1 + mean_ct_1
+	style_tensor[0][1] = (style_tensor[0][1] - mean_st_2) * std_ct_2 / std_st_2 + mean_ct_2
+	style_tensor[0][2] = (style_tensor[0][2] - mean_st_3) * std_ct_3 / std_st_3 + mean_ct_3
+	return style_tensor
 
 
 def main():	
@@ -103,6 +128,10 @@ def main():
 			
 			style_tensor = t(Image.open(style_pth)).unsqueeze(0).to(device)
 			
+			# Linear Histogram Matching if needed
+			if args.color_control:
+				style_tensor = linear_histogram_matching(content_tensor,style_tensor)
+
 			# Start time
 			tic = time.perf_counter()
 			
