@@ -1,6 +1,5 @@
 import os
 import argparse
-from turtle import end_fill
 import torch
 import time
 import numpy as np
@@ -67,12 +66,13 @@ def linear_histogram_matching(content_tensor, style_tensor):
 	Return:
 		style_tensor (torch.FloatTensor): histogram matched Style Image
 	"""
-
+    #for batch
 	for b in range(len(content_tensor)):
 		std_ct = []
 		std_st = []
 		mean_ct = []
 		mean_st = []
+		#for channel
 		for c in range(len(content_tensor[b])):
 			std_ct.append(torch.var(content_tensor[b][c],unbiased = False))
 			mean_ct.append(torch.mean(content_tensor[b][c]))
