@@ -79,17 +79,6 @@ def linear_histogram_matching(content_tensor, style_tensor):
 			std_st.append(torch.var(style_tensor[b][c],unbiased = False))
 			mean_st.append(torch.mean(style_tensor[b][c]))
 			style_tensor[b][c] = (style_tensor[b][c] - mean_st[c]) * std_ct[c] / std_st[c] + mean_ct[c]
-	"""
-	std_ct_1, mean_ct_1 = torch.var_mean(content_tensor[0][0],unbiased = False)
-	std_ct_2, mean_ct_2 = torch.var_mean(content_tensor[0][1],unbiased = False)
-	std_ct_3, mean_ct_3 = torch.var_mean(content_tensor[0][2],unbiased = False)
-	std_st_1, mean_st_1 = torch.var_mean(style_tensor[0][0],unbiased = False)
-	std_st_2, mean_st_2 = torch.var_mean(style_tensor[0][1],unbiased = False)
-	std_st_3, mean_st_3 = torch.var_mean(style_tensor[0][2],unbiased = False)
-	style_tensor[0][0] = (style_tensor[0][0] - mean_st_1) * std_ct_1 / std_st_1 + mean_ct_1
-	style_tensor[0][1] = (style_tensor[0][1] - mean_st_2) * std_ct_2 / std_st_2 + mean_ct_2
-	style_tensor[0][2] = (style_tensor[0][2] - mean_st_3) * std_ct_3 / std_st_3 + mean_ct_3
-	"""
 	return style_tensor
 
 
