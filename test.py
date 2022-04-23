@@ -146,9 +146,9 @@ def main():
 			times.append(toc-tic)
 
 			# Save image
-			out_pth = out_dir + content_pth.stem + '_style_' + style_pth.stem + '_alpha' + str(args.alpha) + content_pth.suffix
-			if args.color_control:
-				out_pth += '_colorcontrol'
+			out_pth = out_dir + content_pth.stem + '_style_' + style_pth.stem + '_alpha' + str(args.alpha)
+			if args.color_control: out_pth += '_colorcontrol'
+			out_pth += content_pth.suffix
 			save_image(out_tensor, out_pth)
 
 			if args.grid_pth:
