@@ -73,7 +73,9 @@ optional arguments:
 To test style transfer interpolation, run the script test_interpolate.py. Specify `--style_image` with multiple paths separated by comma. Specify `--interpolation_weights` to interpolate once. All outputs are saved in `./results_interpolate/`. Specify `--grid_pth` to interpolate with different built-in weights and provide 4 style images.
 
 ```
-$ python test_interpolation.py --content_image $IMG --style_image $STYLE --interpolation_weights $WEIGHTS --cuda
+
+$ python test_interpolate.py --content_image $IMG --style_image $STYLE $WEIGHT --cuda
+
 
 optional arguments:
   -h, --help            show this help message and exit

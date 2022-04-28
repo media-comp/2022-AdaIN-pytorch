@@ -4,7 +4,7 @@ import torch
 from pathlib import Path
 from AdaIN import AdaINNet
 from PIL import Image
-from utils import transform, adaptive_instance_normalization, Range
+from utils import transform, adaptive_instance_normalization,linear_histogram_matching, Range
 import cv2
 import imageio
 import numpy as np
@@ -17,6 +17,7 @@ parser.add_argument('--style_image', type=str, required=True, help='Style image 
 parser.add_argument('--decoder_weight', type=str, default='decoder.pth', help='Decoder weight file path')
 parser.add_argument('--alpha', type=float, default=1.0, choices=[Range(0.0, 1.0)], help='Alpha [0.0, 1.0] controls style transfer level')
 parser.add_argument('--cuda', action='store_true', help='Use CUDA')
+parser.add_argument('--color_control', action='store_true', help='Preserve content color')
 args = parser.parse_args()
 
 device = torch.device('cuda' if args.cuda and torch.cuda.is_available() else 'cpu')
@@ -67,8 +68,10 @@ def main():
 	# Prepare output video writer
 	out_dir = './results_video/'
 	os.makedirs(out_dir, exist_ok=True)
-	out_pth = Path(out_dir + content_video_pth.stem + '_style_' \
-		+ style_image_pth.stem + content_video_pth.suffix)
+	out_pth = out_dir + content_video_pth.stem + '_style_' + style_image_pth.stem
+	if args.color_control: out_pth += '_colorcontrol'
+	out_pth += content_video_pth.suffix
+	out_pth = Path(out_pth)
 	writer = imageio.get_writer(out_pth, mode='I', fps=fps)
 
 	# Load AdaIN model
@@ -82,6 +85,7 @@ def main():
 	style_tensor = t(style_image).unsqueeze(0).to(device)
 
 
+
 	while content_video.isOpened():
 		ret, content_image = content_video.read()
 		# Failed to read a frame
@@ -90,6 +94,10 @@ def main():
 		
 		content_tensor = t(Image.fromarray(content_image)).unsqueeze(0).to(device)
 		
+		# Linear Histogram Matching if needed
+		if args.color_control:
+			style_tensor = linear_histogram_matching(content_tensor,style_tensor)
+
 		with torch.no_grad():
 			out_tensor = style_transfer(content_tensor, style_tensor, model.encoder
 				, model.decoder, args.alpha).cpu().detach().numpy()

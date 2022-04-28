@@ -7,7 +7,7 @@ from pathlib import Path
 from AdaIN import AdaINNet
 from PIL import Image
 from torchvision.utils import save_image
-from utils import adaptive_instance_normalization, transform, Range, grid_image
+from utils import adaptive_instance_normalization, transform,linear_histogram_matching, Range, grid_image
 from glob import glob
 
 parser = argparse.ArgumentParser()
@@ -19,6 +19,7 @@ parser.add_argument('--interpolation_weights', type=str, help='Weights of interp
 parser.add_argument('--cuda', action='store_true', help='Use CUDA')
 parser.add_argument('--grid_pth', type=str, default=None, help='Specify a grid image path (default=None) if generate a grid image that contains all style transferred images. \
 	if use grid mode, provide 4 style images')
+parser.add_argument('--color_control', action='store_true', help='Preserve content color')
 args = parser.parse_args()
 assert args.content_image
 assert args.style_image
@@ -106,7 +107,13 @@ def main():
 		style_tensor = []
 		for style_pth in style_pths:
 			img = Image.open(style_pth)
-			style_tensor.append(transform([512, 512])(img))
+			if args.color_control:
+				img = transform([512,512])(img).unsqueeze(0)
+				img = linear_histogram_matching(content_tensor,img)
+				img = img.squeeze(0)
+				style_tensor.append(img)
+			else:
+				style_tensor.append(transform([512, 512])(img))
 		style_tensor = torch.stack(style_tensor, dim=0).to(device)
 		
 		for inter_weight in inter_weights:
@@ -117,7 +124,9 @@ def main():
 			print("Content: " + content_pth.stem + ". Style: " + str([style_pth.stem for style_pth in style_pths]) + ". Interpolation weight: ", str(inter_weight))
 
 			# Save results
-			out_pth = out_dir + content_pth.stem + '_interpolate_' + str(inter_weight) + content_pth.suffix
+			out_pth = out_dir + content_pth.stem + '_interpolate_' + str(inter_weight)
+			if args.color_control: out_pth += '_colorcontrol'
+			out_pth += content_pth.suffix
 			save_image(out_tensor, out_pth)
 
 			if args.grid_pth:

@@ -8,7 +8,7 @@ from AdaIN import AdaINNet
 from PIL import Image
 from torchvision.utils import save_image
 from torchvision.transforms import ToPILImage
-from utils import adaptive_instance_normalization, grid_image, transform, Range
+from utils import adaptive_instance_normalization, grid_image, transform,linear_histogram_matching, Range
 from glob import glob
 
 parser = argparse.ArgumentParser()
@@ -20,6 +20,7 @@ parser.add_argument('--decoder_weight', type=str, default='decoder.pth', help='D
 parser.add_argument('--alpha', type=float, default=1.0, choices=[Range(0.0, 1.0)], help='Alpha [0.0, 1.0] controls style transfer level')
 parser.add_argument('--cuda', action='store_true', help='Use CUDA')
 parser.add_argument('--grid_pth', type=str, default=None, help='Specify a grid image path (default=None) if generate a grid image that contains all style transferred images')
+parser.add_argument('--color_control', action='store_true', help='Preserve content color')
 args = parser.parse_args()
 assert args.content_image or args.content_dir
 assert args.style_image or args.style_dir
@@ -103,6 +104,10 @@ def main():
 			
 			style_tensor = t(Image.open(style_pth)).unsqueeze(0).to(device)
 			
+			# Linear Histogram Matching if needed
+			if args.color_control:
+				style_tensor = linear_histogram_matching(content_tensor,style_tensor)
+
 			# Start time
 			tic = time.perf_counter()
 			
@@ -117,7 +122,9 @@ def main():
 			times.append(toc-tic)
 
 			# Save image
-			out_pth = out_dir + content_pth.stem + '_style_' + style_pth.stem + '_alpha' + str(args.alpha) + content_pth.suffix
+			out_pth = out_dir + content_pth.stem + '_style_' + style_pth.stem + '_alpha' + str(args.alpha)
+			if args.color_control: out_pth += '_colorcontrol'
+			out_pth += content_pth.suffix
 			save_image(out_tensor, out_pth)
 
 			if args.grid_pth:
