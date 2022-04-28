@@ -8,7 +8,7 @@ from AdaIN import AdaINNet
 from PIL import Image
 from torchvision.utils import save_image
 from torchvision.transforms import ToPILImage
-from utils import adaptive_instance_normalization, grid_image, transform, Range
+from utils import adaptive_instance_normalization, grid_image, transform,linear_histogram_matching, Range
 from glob import glob
 
 parser = argparse.ArgumentParser()
@@ -53,33 +53,6 @@ def style_transfer(content_tensor, style_tensor, encoder, decoder, alpha=1.0):
 	
 	mix_enc = alpha * transfer_enc + (1-alpha) * content_enc
 	return decoder(mix_enc)
-
-
-def linear_histogram_matching(content_tensor, style_tensor):
-	"""
-	Given content_tensor and style_tensor, transform style_tensor histogram to that of content_tensor.
-
-	Args:
-		content_tensor (torch.FloatTensor): Content image 
-		style_tensor (torch.FloatTensor): Style Image
-	
-	Return:
-		style_tensor (torch.FloatTensor): histogram matched Style Image
-	"""
-    #for batch
-	for b in range(len(content_tensor)):
-		std_ct = []
-		std_st = []
-		mean_ct = []
-		mean_st = []
-		#for channel
-		for c in range(len(content_tensor[b])):
-			std_ct.append(torch.var(content_tensor[b][c],unbiased = False))
-			mean_ct.append(torch.mean(content_tensor[b][c]))
-			std_st.append(torch.var(style_tensor[b][c],unbiased = False))
-			mean_st.append(torch.mean(style_tensor[b][c]))
-			style_tensor[b][c] = (style_tensor[b][c] - mean_st[c]) * std_ct[c] / std_st[c] + mean_ct[c]
-	return style_tensor
 
 
 def main():	
