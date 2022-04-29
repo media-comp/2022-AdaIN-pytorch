@@ -1,26 +1,26 @@
-2022-AdaIN-pytorch
-============================
+# 2022-AdaIN-pytorch
+
 This is an unofficial Pytorch implementation of the paper, `Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization, ICCV 2017` [arxiv](https://arxiv.org/abs/1703.06868). I referred to the [official implementation](https://github.com/xunhuang1995/AdaIN-style) in Torch. I used pretrained weights of vgg19 and decoder from [naoto0804](https://github.com/naoto0804/pytorch-AdaIN).
 
-Requirements
-----------------------------
+## Requirements
+
 Install requirements by `$ pip install -r requirements.txt`
 
-* Python 3.7+
-* PyTorch 1.10
-* Pillow
-* TorchVision
-* Numpy
-* imageio
-* tqdm
+- Python 3.7+
+- PyTorch 1.10
+- Pillow
+- TorchVision
+- Numpy
+- imageio
+- tqdm
 
-Usage
-----------------------------
+## Usage
 
 ### Training
 
-The encoder uses pretrained vgg19 network. Download the [vgg19 weight](https://drive.google.com/file/d/1UcSl-Zn3byEmn15NIPXMf9zaGCKc2gfx/view?usp=sharing). The decoder is trained on MSCOCO and wikiart dataset. 
+The encoder uses pretrained vgg19 network. Download the [vgg19 weight](https://drive.google.com/file/d/1UcSl-Zn3byEmn15NIPXMf9zaGCKc2gfx/view?usp=sharing). The decoder is trained on MSCOCO and wikiart dataset.
 Run the script train.py
+
 ```
 $ python train.py --content_dir $CONTENT_DIR --style_dir STYLE_DIR --cuda
 
@@ -66,6 +66,7 @@ optional arguments:
   --grid_pth GRID_PTH
                         Specify a grid image path (default=None) if generate a grid image
                         that contains all style transferred images
+  --color_control       Preserve content color
 ```
 
 ### Test Image Interpolation Style Transfer
@@ -95,6 +96,7 @@ optional arguments:
                         transfer multiple times with different built-in weights and generate a
                         grid image that contains all style transferred images. Provide 4 style
                         images. Do not specify if input interpolation_weights.
+  --color_control       Preserve content color
 ```
 
 ### Test Video Style Transfer
@@ -114,24 +116,34 @@ optional arguments:
   --alpha {Alpha Range}
                         Alpha [0.0, 1.0] controls style transfer level
   --cuda                Use CUDA
+  --color_control       Preserve content color
 ```
 
-Examples
-----------------------------
+## Examples
+
 ### Basic Style Transfer
+
 ![grid](https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/examples/grid.jpg)
 
 ### Different levels of style transfer
+
 ![grid_alpha](https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/examples/grid_alpha.png)
 
 ### Interpolation Style Transfer
+
 ![grid_inter](https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/examples/grid_interpolation.png)
 
+### Style Transfer with color control
+
+|![brad_pitt_style_flower_of_life_alpha1 0](https://user-images.githubusercontent.com/45582330/165221498-21c09999-1228-4bad-bf9f-f50aece289d7.jpg)|![brad_pitt_style_flower_of_life_alpha1 0_colorcontrol](https://user-images.githubusercontent.com/45582330/165221515-9a81a97c-19d0-4de6-ad10-e654d941de5d.jpg)|
+|---|---|
+|w/o color control|w/ color control|
+
 ### Video Style Transfer
+
 Original Video
 
 https://user-images.githubusercontent.com/42717345/163805137-d7ba350b-a42e-4b91-ac2b-4916b1715153.mp4
-
 
 Style Image
 
@@ -141,10 +153,11 @@ Style Transfer Video
 
 https://user-images.githubusercontent.com/42717345/163805886-a1199a40-6032-4baf-b2d4-30e6e05b3385.mp4
 
+## References
 
-References
-----------------------------
-* X. Huang and S. Belongie. "Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization.", in ICCV, 2017. [arxiv](https://arxiv.org/abs/1703.06868)
-* [Original implementation in Torch](https://github.com/xunhuang1995/AdaIN-style)
-* [Pretrained weights](https://github.com/naoto0804/pytorch-AdaIN)
-* List of all source URLs of images collected from the internet. [Image_sources.txt](https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/Image_sources.txt)
+- X. Huang and S. Belongie. "Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization.", in ICCV, 2017. [arxiv](https://arxiv.org/abs/1703.06868)
+- [Original implementation in Torch](https://github.com/xunhuang1995/AdaIN-style)
+- [Pretrained weights](https://github.com/naoto0804/pytorch-AdaIN)
+- List of all source URLs of images collected from the internet. [Image_sources.txt](https://github.com/media-comp/2022-AdaIN-pytorch/blob/main/Image_sources.txt)
+- L. A. Gatys, A. S. Ecker, M. Bethge, A. Hertzmann, and E. Shechtman. Controlling perceptual factors in neural style transfer. In CVPR, 2017. [arxiv](https://arxiv.org/abs/1611.07865)
+- A. Hertzmann. Algorithms for Rendering in Artistic Styles. PhD thesis, New York University, 2001.
