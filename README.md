@@ -15,6 +15,26 @@ Install requirements by `$ pip install -r requirements.txt`
 - tqdm
 
 ## Usage
+### Demo Website
+You can access a demo and perform style transfer at [2022-AdaIN-pytorch-Demo](https://huggingface.co/spaces/subatomicseer/2022-AdaIN-pytorch-Demo) Huggingface Space. 
+
+### Local Web App
+If you would like to run the Streamlit app on your local system do the following steps:
+
+Install requirements by:
+
+`$ pip install -r streamlit_app/requirements.txt`
+
+Following additional packages are for the web app:
+- streamlit
+- gdown
+- packaging
+
+Run the webapp by:
+
+`$ streamlit run streamlit_app/app.py`
+
+The above command will open a window in your default browser (if available), and will also display the local url, which you can navigate to, to use the app.
 
 ### Training
 
