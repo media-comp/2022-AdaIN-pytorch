@@ -17,3 +17,11 @@ jobs:
       - name: Run test.py 
         run: 
           python test.py --content_image images/content/cat.jpg --style_image images/art/asheville.jpg
+
+      - name: Install streamlit dependencies
+        run: pip install -r streamlit_app/requirements.txt
+
+      - name: Run streamlit app
+        run: |
+          nohup streamlit run streamlit_app/app.py &
+          curl http://localhost:8501
