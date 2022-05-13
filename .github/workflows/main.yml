@@ -19,7 +19,9 @@ jobs:
           python test.py --content_image images/content/cat.jpg --style_image images/art/asheville.jpg
 
       - name: Install streamlit dependencies
-        run: pip install -r streamlit_app/requirements.txt
+        run: |
+          pip install -r streamlit_app/requirements.txt
+          pip install --upgrade protobuf
 
       - name: Run streamlit app
         run: |
