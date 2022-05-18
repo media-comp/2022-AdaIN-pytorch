@@ -85,11 +85,13 @@ if __name__ == '__main__':
         alpha = st.slider('Strength of style transfer', 0.0, 1.0, 1.0, 0.01)
         process = st.button('Stylize')
 
+    output_image = 'output.png'
     if content is not None and style is not None and process:
         print(content, style)
-        with col3:
-            with st.spinner('Processing...'):
-                output_image = convert(content, style, VGG_WEIGHT_FILENAME, DECODER_WEIGHT_FILENAME, alpha, color_control)
+        with st.spinner('Processing...'):
+            output_image = convert(content, style, VGG_WEIGHT_FILENAME, DECODER_WEIGHT_FILENAME, alpha, color_control)
 
+    if os.path.exists(output_image):
+        with col3:
             st.image(output_image, width=None, caption='Stylized Image')
 
