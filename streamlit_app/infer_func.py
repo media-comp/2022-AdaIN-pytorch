@@ -55,6 +55,7 @@ def convert(content_path, style_path, vgg_weights_path, decoder_weights_path, al
     with torch.no_grad():
         out_tensor = style_transfer(content_tensor, style_tensor, model.encoder, model.decoder, alpha).cpu()
 
-    output_image = torchvision.transforms.ToPILImage()(out_tensor.squeeze(0))
+    outimage_fname = 'output.png'
+    torchvision.utils.save_image(out_tensor.squeeze(0), outimage_fname)
 
-    return output_image
+    return outimage_fname
