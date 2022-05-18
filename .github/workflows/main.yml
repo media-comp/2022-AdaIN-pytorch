@@ -10,6 +10,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.7' # Version range or exact version of a Python version to use, using SemVer
 
       - name: Install dependencies
         run: pip install -r requirements.txt
@@ -17,3 +20,13 @@ jobs:
       - name: Run test.py 
         run: 
           python test.py --content_image images/content/cat.jpg --style_image images/art/asheville.jpg
+
+      - name: Install streamlit dependencies
+        run: |
+          pip install -r streamlit_app/requirements.txt
+
+      - name: Run streamlit app
+        run: |
+          nohup streamlit run streamlit_app/app.py &
+          sleep 5
+          curl http://localhost:8501
