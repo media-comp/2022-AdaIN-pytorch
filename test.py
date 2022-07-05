@@ -145,7 +145,7 @@ def main():
 		print("Generating grid image")
 		grid_image(len(content_pths) + 1, len(style_pths) + 1, imgs, save_pth=args.grid_pth)
 		print("Finished")
-	#generate spatial control image
+	#generate spatial control image, there must be only one file in the directory, and two style images in directory
 	if args.spatial_control:
 		onlyfiles = [f for f in os.listdir("results") if os.path.isfile(os.path.join("results", f))]
 		mask_img = cv2.imread(args.mask)
