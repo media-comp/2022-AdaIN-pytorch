@@ -10,6 +10,7 @@ from torchvision.utils import save_image
 from torchvision.transforms import ToPILImage
 from utils import adaptive_instance_normalization, grid_image, transform,linear_histogram_matching, Range
 from glob import glob
+import cv2 as cv2
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--content_image', type=str, help='Content image file path')
@@ -21,6 +22,9 @@ parser.add_argument('--alpha', type=float, default=1.0, choices=[Range(0.0, 1.0)
 parser.add_argument('--cuda', action='store_true', help='Use CUDA')
 parser.add_argument('--grid_pth', type=str, default=None, help='Specify a grid image path (default=None) if generate a grid image that contains all style transferred images')
 parser.add_argument('--color_control', action='store_true', help='Preserve content color')
+parser.add_argument('--spatial_control', action='store_true', help='Preserve content color')
+parser.add_argument('--mask', type=str, help='Mask image file path')
+
 args = parser.parse_args()
 assert args.content_image or args.content_dir
 assert args.style_image or args.style_dir
@@ -141,6 +145,23 @@ def main():
 		print("Generating grid image")
 		grid_image(len(content_pths) + 1, len(style_pths) + 1, imgs, save_pth=args.grid_pth)
 		print("Finished")
-
+	#generate spatial control image
+	if args.spatial_control:
+		onlyfiles = [f for f in os.listdir("results") if os.path.isfile(os.path.join("results", f))]
+		mask_img = cv2.imread(args.mask)
+		out_img=cv2.imread("results/"+onlyfiles[0])
+		out_img = np.array(out_img)
+		im = cv2.resize(mask_img, (512, 680))
+		mask = im[:, :, 0] == 255
+		reverse_mask =mask==False
+		mask = np.expand_dims(mask, axis=-1)
+		reverse_mask = np.expand_dims(reverse_mask, axis=-1)
+		post_out_img = out_img * mask
+		out_img = cv2.imread("results/" + onlyfiles[1])
+		out_img = np.array(out_img)
+		post_reverse_out_img=out_img * reverse_mask
+		final_out_img=post_reverse_out_img+post_out_img
+		cv2.imwrite("results/spatial_result.jpg",final_out_img)
+		
 if __name__ == '__main__':
 	main()
